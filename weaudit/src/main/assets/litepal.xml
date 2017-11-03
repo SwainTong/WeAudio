@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<litepal>
+    <!--
+        定义数据库的名称，需要以.db作为文件后缀，如果没有.db，将会默认添加
+    -->
+    <dbname value="WorkManager" ></dbname>
+
+    <!--
+        定义数据库的版本号
+    -->
+    <version value="1" ></version>
+
+    <!--
+        定义所有的映射模型，LitePal会对每一个表创建映射类
+        例如
+        <list>
+            <mapping class="com.test.model.Reader"></mapping>
+            <mapping class="com.test.model.Magazine"></mapping>
+        </list>
+    -->
+    <list>
+        <mapping class="com.lan.tong.weaudit.domain.Employee"></mapping>
+        <mapping class="com.lan.tong.weaudit.domain.Make"></mapping>
+        <mapping class="com.lan.tong.weaudit.domain.Product"></mapping>
+    </list>
+</litepal>

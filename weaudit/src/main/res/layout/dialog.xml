@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:id="@+id/create_user_dialog_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minWidth="200dp"
+        android:orientation="vertical"
+        android:padding="10dp"
+        android:paddingBottom="30dp"
+        android:paddingTop="30dp">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@color/lightblue"
+            android:text="  修改员工信息"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:gravity="center_vertical">
+
+        </TextView>
+        <EditText
+            android:id="@+id/text_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="姓名"
+            android:background="@drawable/edit"
+            android:layout_marginTop="10dp"
+            android:minHeight="45dp"
+            android:textSize="18sp"
+            android:textColor="#000"/>
+
+        <EditText
+            android:id="@+id/text_mobile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/edit"
+            android:hint="手机号"
+            android:minHeight="45dp"
+            android:textSize="18sp"
+            android:textColor="#000" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:orientation="horizontal"
+            android:gravity="center">
+            <Button
+                android:id="@+id/btn_save_pop"
+                android:layout_width="100dp"
+                android:layout_height="50dp"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/button"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:text="保存" />
+            <Button
+                android:id="@+id/btn_cancel_pop"
+                android:layout_width="100dp"
+                android:layout_height="50dp"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/button"
+                android:layout_marginLeft="20dp"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:text="取消" />
+        </LinearLayout>
+
+
+
+    </LinearLayout>
+</android.support.constraint.ConstraintLayout>

@@ -1,6 +1,9 @@
 package com.lan.tong.weaudit.utils;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
@@ -28,18 +31,22 @@ import okhttp3.Request;
 import okhttp3.Response;
 import com.lan.tong.weaudit.R;
 import com.lan.tong.weaudit.bean.RecordBean;
+import com.lan.tong.weaudit.domain.Employee;
 import com.lan.tong.weaudit.domain.Make;
-
-/**
- * Created by Administrator on 2017/8/11.
- */
+import com.lan.tong.weaudit.domain.Product;
 
 public class RecordAdapter extends BaseSwipeAdapter {
     //保存每个list项目
-    List<RecordBean> items;
-    Context context;
-    OkHttpClient okHttpClient = new OkHttpClient();
+    private List<RecordBean> items;
+    private Context context;
+    private OkHttpClient okHttpClient = new OkHttpClient();
+
+    //dialog
+    private RecordDialog createUserDialog;
+
     //Handler回调
+    @SuppressLint("HandlerLeak")
+    private
     Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -79,26 +86,24 @@ public class RecordAdapter extends BaseSwipeAdapter {
         TextView record_amount_item = (TextView) view.findViewById(R.id.record_amount_item);
         TextView record_wage_item = (TextView) view.findViewById(R.id.record_wage_item);
 
-        //是否标记
-        final CheckBox cb_swipe_tag1 = (CheckBox) view.findViewById(R.id.cb_swipe_tag1);
-        TextView tv_swipe_delect1 = (TextView) view.findViewById(R.id.tv_swipe_delect1);
+        TextView tv_swipe_delete = (TextView) view.findViewById(R.id.tv_swipe_delect1);
         TextView tv_swipe_update = (TextView) view.findViewById(R.id.tv_swipe_update);
 
         //layout
         final SwipeLayout product_item_content = (SwipeLayout) view.findViewById(R.id.product_item_content);
         product_item_content.setShowMode(SwipeLayout.ShowMode.PullOut);
 
-        tv_swipe_delect1.setOnClickListener(new View.OnClickListener() {
+        tv_swipe_delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final AlertDialog.Builder builder2 = new AlertDialog.Builder(context);
                 builder2.setTitle("删除生产记录");
-                builder2.setIcon(R.drawable.ah);
+                builder2.setIcon(R.drawable.delete);
                 builder2.setMessage("确定要删除吗？");
                 builder2.setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        DataSupport.deleteAll(Make.class, "id=?",items.get(i).getId().toString());
+                        DataSupport.delete(Make.class,items.get(i).getId());
                         items.remove(i);
                         notifyDataSetChanged();
                         product_item_content.close();
@@ -117,39 +122,57 @@ public class RecordAdapter extends BaseSwipeAdapter {
         });
 
 
-        cb_swipe_tag1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(context,items.get(i).getRecordProduct()+i,Toast.LENGTH_SHORT).show();
-                if (cb_swipe_tag1.isChecked()) {
-                    items.get(i).setTag(true);
-                    notifyDataSetChanged();
-                    product_item_content.close();
-                } else {
-                    items.get(i).setTag(false);
-                    notifyDataSetChanged();
-                    product_item_content.close();
-                }
-
-
-            }
-        });
 
 
         tv_swipe_update.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //修改记录
-                Toast.makeText(context,items.get(i).getRecordProduct()+i,Toast.LENGTH_SHORT).show();
+                //Toast.makeText(context,"修改",Toast.LENGTH_SHORT).show();
+                //弹出修改对话框
+                createUserDialog = new RecordDialog((Activity) context,items.get(i).getRecordProduct().getId(),items.get(i).getRecordEmployee().getId(),items.get(i).getRecordDate(),items.get(i).getRecordAmount(),R.style.Theme_AppCompat_Dialog,new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        switch (view.getId()) {
+                            case R.id.btn_save_pop:
+                                int employeeId = Integer.parseInt(createUserDialog.getRecordEmployee().getSelectedItem().toString().split(" ")[0]);
+                                int productId = Integer.parseInt(createUserDialog.getRecordProduct().getSelectedItem().toString().split(" ")[0]);
+                                String date = createUserDialog.getRecordDate().getText().toString().trim();
+                                int amount = Integer.parseInt(createUserDialog.getRecordAmount().getText().toString().trim());
+                                //获取对象
+                                Product product = DataSupport.find(Product.class,productId);
+                                Employee employee = DataSupport.find(Employee.class,employeeId);
+                                //更新内容
+                                ContentValues values = new ContentValues();
+                                values.put("employee_id", employeeId);
+                                values.put("product_id",productId);
+                                values.put("makedate",date);
+                                values.put("makeamount",amount);
+                                DataSupport.update(Make.class,values,items.get(i).getId());
+                                items.get(i).setRecordProduct(product);
+                                items.get(i).setRecordEmployee(employee);
+                                items.get(i).setRecordDate(date);
+                                items.get(i).setRecordAmount(amount);
+                                createUserDialog.dismiss();
+                                notifyDataSetChanged();
+                                break;
+                            default:
+                                createUserDialog.dismiss();
+                                break;
+                        }
+                    }
+                });
+                createUserDialog.show();
+                product_item_content.close();
             }
         });
 
-        record_logo.setText(items.get(i).getRecordEmployee().toString());
-        record_date_item.setText(items.get(i).getRecordDate().toString());
-        record_employee_item.setText(items.get(i).getRecordEmployee().toString());
-        record_product_item.setText(items.get(i).getRecordProduct().toString());
+        record_logo.setText(items.get(i).getRecordEmployee().getEmployeeName());
+        record_date_item.setText(items.get(i).getRecordDate());
+        record_employee_item.setText(items.get(i).getRecordEmployee().getEmployeeName());
+        record_product_item.setText(String.format("%s%s", items.get(i).getRecordProduct().getProductType(), items.get(i).getRecordProduct().getProductName()));
         record_amount_item.setText(String.valueOf(items.get(i).getRecordAmount()));
-        record_wage_item.setText(String.valueOf(items.get(i).getRecordAmount() * 2));
+        record_wage_item.setText(String.valueOf(items.get(i).getRecordAmount() * items.get(i).getRecordProduct().getProductWage()));
     }
 
 
@@ -158,12 +181,10 @@ public class RecordAdapter extends BaseSwipeAdapter {
         return items.size();
     }
 
-
     @Override
     public Object getItem(int position) {
         return items.get(position);
     }
-
 
     @Override
     public long getItemId(int position) {
@@ -171,12 +192,7 @@ public class RecordAdapter extends BaseSwipeAdapter {
     }
 
 
-    class ViewHolder{
-        TextView name;
-        TextView org;
-        TextView count;
-        TextView extra;
-    }
+
     private void exec(Request request) {
         okHttpClient.newCall(request).enqueue(new Callback() {
             @Override

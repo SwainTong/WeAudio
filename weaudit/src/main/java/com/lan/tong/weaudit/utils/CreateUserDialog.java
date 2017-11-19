@@ -32,8 +32,9 @@ public class CreateUserDialog extends Dialog {
     private Button btn_cancel;
 
     public EditText text_name;
-
     public EditText text_mobile;
+    private String name;
+    private String mobie;
 
 
     private View.OnClickListener mClickListener;
@@ -43,10 +44,12 @@ public class CreateUserDialog extends Dialog {
         this.context = context;
     }
 
-    public CreateUserDialog(Activity context, int theme, View.OnClickListener clickListener) {
+    public CreateUserDialog(Activity context, String name,String mobi,int theme, View.OnClickListener clickListener) {
         super(context, theme);
         this.context = context;
         this.mClickListener = clickListener;
+        this.name = name;
+        this.mobie = mobi;
     }
 
     @Override
@@ -57,6 +60,8 @@ public class CreateUserDialog extends Dialog {
 
         text_name = (EditText) findViewById(R.id.text_name);
         text_mobile = (EditText) findViewById(R.id.text_mobile);
+        text_name.setText(name);
+        text_mobile.setText(mobie);
 
   /*
    * 获取圣诞框的窗口对象及参数对象以修改对话框的布局设置, 可以直接调用getWindow(),表示获得这个Activity的Window
@@ -75,6 +80,9 @@ public class CreateUserDialog extends Dialog {
         btn_save = (Button) findViewById(R.id.btn_save_pop);
 
         // 为按钮绑定点击事件监听器
+        btn_save.setOnClickListener(mClickListener);
+        //取消按钮
+        btn_save = (Button) findViewById(R.id.btn_cancel_pop);
         btn_save.setOnClickListener(mClickListener);
 
         this.setCancelable(true);

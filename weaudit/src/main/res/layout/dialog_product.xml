@@ -15,34 +15,54 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:background="@color/lightblue"
-            android:text="  员工信息"
+            android:text="  产品信息"
             android:textSize="22sp"
             android:textStyle="bold"
             android:gravity="center_vertical">
-
         </TextView>
         <EditText
-            android:id="@+id/text_name"
+            android:id="@+id/product_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="姓名"
+            android:hint="产品名称"
             android:background="@drawable/edit"
             android:layout_marginTop="10dp"
             android:minHeight="45dp"
             android:textSize="18sp"
             android:textColor="#000"/>
 
+        <android.support.v7.widget.AppCompatSpinner
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/edit"
+            android:id="@+id/product_type"
+            android:popupBackground="@drawable/spinner">
+        </android.support.v7.widget.AppCompatSpinner>
+
         <EditText
-            android:id="@+id/text_mobile"
+            android:id="@+id/product_wage"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:background="@drawable/edit"
-            android:hint="手机号"
+            android:hint="员工工价"
             android:minHeight="45dp"
             android:textSize="18sp"
             android:textColor="#000"
-            android:inputType="number"/>
+            android:inputType="numberDecimal"/>
+
+        <EditText
+            android:id="@+id/product_margin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/edit"
+            android:hint="结算总价"
+            android:minHeight="45dp"
+            android:textSize="18sp"
+            android:textColor="#000"
+            android:inputType="numberDecimal"/>
 
         <LinearLayout
             android:layout_width="match_parent"

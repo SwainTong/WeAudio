@@ -24,22 +24,6 @@
             android:text="删除"
              />
 
-
-        <CheckBox
-            android:id="@+id/cb_swipe_tag1"
-            android:layout_width="0dp"
-            android:layout_height="fill_parent"
-            android:layout_weight="1"
-            android:textColor="#ffffff"
-            android:gravity="center"
-            android:textSize="20dp"
-            android:background="#339900"
-            android:button="@android:color/transparent"
-            android:text="标记"/>
-
-
-
-
         <TextView
             android:id="@+id/tv_swipe_update"
             android:layout_width="0dp"

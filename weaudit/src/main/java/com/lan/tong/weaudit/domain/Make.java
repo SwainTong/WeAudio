@@ -8,10 +8,29 @@ import org.litepal.crud.DataSupport;
  */
 public class Make extends DataSupport {
 
+	private int id;
 	private Employee employee;
 	private Product product;
 	private String makeDate;
 	private Integer makeAmount;
+
+	public Make(Employee employee, Product product, String makeDate, Integer makeAmount) {
+		this.employee = employee;
+		this.product = product;
+		this.makeDate = makeDate;
+		this.makeAmount = makeAmount;
+	}
+
+	public Make() {
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
 
 	public Employee getEmployee() {
 		return employee;

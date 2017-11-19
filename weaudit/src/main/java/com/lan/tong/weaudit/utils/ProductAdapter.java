@@ -1,6 +1,9 @@
 package com.lan.tong.weaudit.utils;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
@@ -28,18 +31,22 @@ import okhttp3.Request;
 import okhttp3.Response;
 import com.lan.tong.weaudit.R;
 import com.lan.tong.weaudit.bean.ProductBean;
+import com.lan.tong.weaudit.domain.Employee;
 import com.lan.tong.weaudit.domain.Product;
 
-/**
- * Created by Administrator on 2017/8/11.
- */
 
 public class ProductAdapter extends BaseSwipeAdapter {
+
+    //dialog
+    private ProductDialog createUserDialog;
+
     //保存每个list项目
-    List<ProductBean> items;
-    Context context;
-    OkHttpClient okHttpClient = new OkHttpClient();
+    private List<ProductBean> items;
+    private Context context;
+    private OkHttpClient okHttpClient = new OkHttpClient();
     //Handler回调
+    @SuppressLint("HandlerLeak")
+    private
     Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -70,6 +77,7 @@ public class ProductAdapter extends BaseSwipeAdapter {
     }
 
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void fillValues(final int i, View view) {
         TextView productLogo = (TextView) view.findViewById(R.id.product_logo);
@@ -78,21 +86,60 @@ public class ProductAdapter extends BaseSwipeAdapter {
         TextView productWage = (TextView) view.findViewById(R.id.product_wage_item);
         TextView productMargin = (TextView) view.findViewById(R.id.product_margin_item);
 
-        //是否标记
-        final CheckBox cb_swipe_tag1 = (CheckBox) view.findViewById(R.id.cb_swipe_tag1);
-        TextView tv_swipe_delect1 = (TextView) view.findViewById(R.id.tv_swipe_delect1);
-        TextView tv_swipe_top1 = (TextView) view.findViewById(R.id.tv_swipe_top1);
+        TextView tv_swipe_update = (TextView) view.findViewById(R.id.cb_swipe_update);
+        TextView tv_swipe_delect = (TextView) view.findViewById(R.id.tv_swipe_delet);
+        TextView tv_swipe_top = (TextView) view.findViewById(R.id.tv_swipe_top);
 
         //layout
         final SwipeLayout product_item_content = (SwipeLayout) view.findViewById(R.id.product_item_content);
         product_item_content.setShowMode(SwipeLayout.ShowMode.PullOut);
 
-        tv_swipe_delect1.setOnClickListener(new View.OnClickListener() {
+        //修改
+        tv_swipe_update.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                //弹出修改对话框
+                createUserDialog = new ProductDialog((Activity) context,items.get(i).getProductType(),items.get(i).getProductName(),items.get(i).getProductWage(),items.get(i).getProductMargin(),R.style.Theme_AppCompat_Dialog,new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        switch (view.getId()) {
+                            case R.id.btn_save_pop:
+                                String type = createUserDialog.getProductType().getSelectedItem().toString().trim();
+                                String name = createUserDialog.getProductName().getText().toString().trim();
+                                double wage = Double.parseDouble(createUserDialog.getProductWage().getText().toString().trim());
+                                double margin = Double.parseDouble(createUserDialog.getProductMargin().getText().toString().trim());
+                                System.out.println(name+"——"+type);
+
+                                ContentValues values = new ContentValues();
+                                values.put("productName", name);
+                                values.put("productType",type);
+                                values.put("productWage",wage);
+                                values.put("productMargin",margin);
+                                DataSupport.update(Product.class,values,items.get(i).getId());
+                                items.get(i).setProductName(name);
+                                items.get(i).setProductType(type);
+                                items.get(i).setProductWage(wage);
+                                items.get(i).setProductMargin(margin);
+                                createUserDialog.dismiss();
+                                notifyDataSetChanged();
+                                break;
+                            default:
+                                createUserDialog.dismiss();
+                                break;
+                        }
+                    }
+                });
+                createUserDialog.show();
+                product_item_content.close();
+            }
+        });
+
+        tv_swipe_delect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final AlertDialog.Builder builder2 = new AlertDialog.Builder(context);
                 builder2.setTitle("删除产品");
-                builder2.setIcon(R.drawable.ah);
+                builder2.setIcon(R.drawable.delete);
                 builder2.setMessage("确定要删除吗？");
                 builder2.setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     @Override
@@ -116,30 +163,12 @@ public class ProductAdapter extends BaseSwipeAdapter {
         });
 
 
-        cb_swipe_tag1.setOnClickListener(new View.OnClickListener() {
+
+        //置顶操作
+        tv_swipe_top.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context,items.get(i).getProductName()+i,Toast.LENGTH_SHORT).show();
-                if (cb_swipe_tag1.isChecked()) {
-                    items.get(i).setTag(true);
-                    notifyDataSetChanged();
-                    product_item_content.close();
-                } else {
-                    items.get(i).setTag(false);
-                    notifyDataSetChanged();
-                    product_item_content.close();
-                }
-
-
-            }
-        });
-
-
-        tv_swipe_top1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(context,items.get(i).getProductName()+i,Toast.LENGTH_SHORT).show();
-//                items.add(items.get(position));
+                //Toast.makeText(context,items.get(i).getProductName()+i,Toast.LENGTH_SHORT).show();
                 items.add(0, items.get(i));
                 items.remove(i + 1);
                 notifyDataSetChanged();
@@ -147,9 +176,8 @@ public class ProductAdapter extends BaseSwipeAdapter {
             }
         });
 
-        productLogo.setText(items.get(i).getProductName().toString());
+        productLogo.setText(items.get(i).getProductName());
         productName.setText(items.get(i).getProductType()+items.get(i).getProductName());
-        Log.i("id--------------",items.get(i).getId().toString());
         productId.setText(items.get(i).getId().toString());
         productWage.setText(String.valueOf(items.get(i).getProductWage()));
         productMargin.setText(String.valueOf(items.get(i).getProductMargin()));

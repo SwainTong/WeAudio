@@ -10,8 +10,8 @@ public class EmployeeBean {
     private String employeeName;//姓名
     private String employeePhone;
 
-
-    public EmployeeBean(String employeeName, String employeePhone) {
+    public EmployeeBean(Integer id, String employeeName, String employeePhone) {
+        this.id = id;
         this.employeeName = employeeName;
         this.employeePhone = employeePhone;
     }

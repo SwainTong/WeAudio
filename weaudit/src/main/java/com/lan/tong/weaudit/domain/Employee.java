@@ -11,11 +11,22 @@ import java.util.List;
  */
 public class Employee extends DataSupport {
 
+
+
+	private Integer id;
 	private String employeeName;
 	private String employeePhone;
 	private String employeePicture;
 	private List<Make> make = new ArrayList<>();//一个员工对应多条生产记录
 
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
 	public List<Make> getMake() {
 		return make;
 	}

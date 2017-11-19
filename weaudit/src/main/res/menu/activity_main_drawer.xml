@@ -6,36 +6,36 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/employee_wage"
-            android:icon="@drawable/ic_menu_camera"
+            android:icon="@drawable/wage"
             android:title="员工工资" />
         <item
             android:id="@+id/product_wage"
-            android:icon="@drawable/ic_menu_camera"
-            android:title="产品统计" />
+            android:icon="@drawable/product_total_list"
+            android:title="结算统计" />
         <item
             android:id="@+id/employee_manage"
-            android:icon="@drawable/ic_menu_gallery"
+            android:icon="@drawable/employee"
             android:title="员工管理" />
         <item
             android:id="@+id/product_manage"
-            android:icon="@drawable/ic_menu_slideshow"
+            android:icon="@drawable/product"
             android:title="产品管理" />
         <item
-            android:id="@+id/nav_manage"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="工具" />
+            android:id="@+id/record_manage"
+            android:icon="@drawable/record"
+            android:title="记录管理" />
     </group>
 
     <item android:title="Communicate">
         <menu>
             <item
                 android:id="@+id/nav_share"
-                android:icon="@drawable/ic_menu_share"
-                android:title="Share" />
+                android:icon="@drawable/up"
+                android:title="上传" />
             <item
                 android:id="@+id/nav_send"
-                android:icon="@drawable/ic_menu_send"
-                android:title="Send" />
+                android:icon="@drawable/down"
+                android:title="下载" />
         </menu>
     </item>
 

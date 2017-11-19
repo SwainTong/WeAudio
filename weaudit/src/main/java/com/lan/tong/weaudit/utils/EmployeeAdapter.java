@@ -1,21 +1,24 @@
 package com.lan.tong.weaudit.utils;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.Color;
+import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.daimajia.swipe.SwipeLayout;
 import com.daimajia.swipe.adapters.BaseSwipeAdapter;
+import com.lan.tong.weaudit.activity.ListEmployeeActivity;
 import com.lan.tong.weaudit.bean.EmployeeBean;
 import com.lan.tong.weaudit.domain.Employee;
 
@@ -31,20 +34,18 @@ import okhttp3.Request;
 import okhttp3.Response;
 import com.lan.tong.weaudit.R;
 
-/**
- * Created by Administrator on 2017/8/11.
- */
-
 public class EmployeeAdapter extends BaseSwipeAdapter {
 
     //dialog
     private CreateUserDialog createUserDialog;
     //保存每个list项目
-    List<EmployeeBean> items;
-    Context context;
-    OkHttpClient okHttpClient = new OkHttpClient();
+    private List<EmployeeBean> items;
+    private Context context;
+    private OkHttpClient okHttpClient = new OkHttpClient();
+
     //Handler回调
-    Handler handler = new Handler() {
+    @SuppressLint("HandlerLeak")
+    private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
@@ -69,8 +70,7 @@ public class EmployeeAdapter extends BaseSwipeAdapter {
 
     @Override
     public View generateView(final int i, ViewGroup viewGroup) {
-        View view = View.inflate(context, R.layout.employee_adapter, null);
-        return view;
+        return View.inflate(context, R.layout.employee_adapter, null);
     }
 
 
@@ -92,7 +92,8 @@ public class EmployeeAdapter extends BaseSwipeAdapter {
         tv_swipe_update.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                createUserDialog = new CreateUserDialog((Activity) context,R.style.Theme_AppCompat_Dialog,new View.OnClickListener() {
+                //弹出修改对话框
+                createUserDialog = new CreateUserDialog((Activity) context,items.get(i).getEmployeeName(),items.get(i).getEmployeePhone(),R.style.Theme_AppCompat_Dialog,new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         switch (view.getId()) {
@@ -100,9 +101,24 @@ public class EmployeeAdapter extends BaseSwipeAdapter {
                                 String name = createUserDialog.text_name.getText().toString().trim();
                                 String mobile = createUserDialog.text_mobile.getText().toString().trim();
                                 System.out.println(name+"——"+mobile);
-                                //DataSupport.findAll(Employee.class, "employeeName=?",items.get(i).getEmployeeName());
-                                //DataSupport.update(Employee.class,);
+//                                List<Employee> employeeList;
+//                                employeeList = DataSupport.where("employeeName=?",items.get(i).getEmployeeName()).find(Employee.class);
+                                //找到要修改的项
+                                //Employee employee = DataSupport.find(Employee.class,items.get(i).getId());
+                                ContentValues values = new ContentValues();
+                                values.put("employeeName", name);
+                                values.put("employeePhone",mobile);
+                                DataSupport.update(Employee.class,values,items.get(i).getId());
+                                items.get(i).setEmployeeName(name);
+                                items.get(i).setEmployeePhone(mobile);
+                                createUserDialog.dismiss();
                                 notifyDataSetChanged();
+                                //Intent intent = new Intent(context,ListEmployeeActivity.class);
+                                //context.startActivity(intent);
+                                //((Activity) context).finish();
+                                break;
+                            default:
+                                createUserDialog.dismiss();
                                 break;
                         }
                     }
@@ -145,7 +161,7 @@ public class EmployeeAdapter extends BaseSwipeAdapter {
         tv_swipe_top1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context,items.get(i).getEmployeeName()+i,Toast.LENGTH_SHORT).show();
+                //Toast.makeText(context,items.get(i).getEmployeeName()+i,Toast.LENGTH_SHORT).show();
 //                items.add(items.get(position));
                 items.add(0, items.get(i));
                 items.remove(i + 1);
@@ -154,7 +170,7 @@ public class EmployeeAdapter extends BaseSwipeAdapter {
             }
         });
 
-        employeeLogo.setText(items.get(i).getEmployeeName().toString());
+        employeeLogo.setText(items.get(i).getEmployeeName().substring(0,1));
         employeeName.setText(items.get(i).getEmployeeName());
         employeePhone.setText(items.get(i).getEmployeePhone());
     }
@@ -185,7 +201,7 @@ public class EmployeeAdapter extends BaseSwipeAdapter {
     private void exec(Request request) {
         okHttpClient.newCall(request).enqueue(new Callback() {
             @Override
-            public void onFailure(Call call, IOException e) {
+            public void onFailure(@NonNull Call call, IOException e) {
                 //失败
                 Log.i("异常：", "--->" + e);
             }

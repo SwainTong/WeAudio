@@ -15,30 +15,52 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:background="@color/lightblue"
-            android:text="  员工信息"
+            android:text="  生产记录"
             android:textSize="22sp"
             android:textStyle="bold"
             android:gravity="center_vertical">
-
         </TextView>
-        <EditText
-            android:id="@+id/text_name"
+
+        <android.support.v7.widget.AppCompatSpinner
+            android:id="@+id/record_employee"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="姓名"
+            android:layout_height="45dp"
+            android:layout_marginTop="20dp"
             android:background="@drawable/edit"
-            android:layout_marginTop="10dp"
             android:minHeight="45dp"
+            android:popupBackground="@drawable/spinner"
+            android:dropDownSelector="@drawable/spinner">
+        </android.support.v7.widget.AppCompatSpinner>
+
+        <android.support.v7.widget.AppCompatSpinner
+            android:id="@+id/record_product"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/edit"
+            android:minHeight="45dp"
+            android:popupBackground="@drawable/spinner">
+        </android.support.v7.widget.AppCompatSpinner>
+
+        <TextView
+            android:id="@+id/record_date"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/edit"
+            android:hint="记录日期"
             android:textSize="18sp"
-            android:textColor="#000"/>
+            android:textColor="#000"
+            android:inputType="date"
+            android:gravity="center_vertical"/>
 
         <EditText
-            android:id="@+id/text_mobile"
+            android:id="@+id/record_amount"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:background="@drawable/edit"
-            android:hint="手机号"
+            android:hint="生产数量"
             android:minHeight="45dp"
             android:textSize="18sp"
             android:textColor="#000"

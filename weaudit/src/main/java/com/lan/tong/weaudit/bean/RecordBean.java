@@ -1,18 +1,19 @@
 package com.lan.tong.weaudit.bean;
 
-/**
- * Created by Administrator on 2017/8/11.
- */
+import com.lan.tong.weaudit.domain.Employee;
+import com.lan.tong.weaudit.domain.Product;
+
+
 
 public class RecordBean {
     private Integer id;
-    private String recordProduct;//产品
-    private String recordEmployee;//生产人
+    private Product recordProduct;//产品
+    private Employee recordEmployee;//生产人
     private String recordDate;//生产日期
     private int recordAmount;//数量
     private boolean tag;
 
-    public RecordBean(Integer id, String recordProduct, String recordEmployee, String recordDate, int recordAmount) {
+    public RecordBean(Integer id, Product recordProduct, Employee recordEmployee, String recordDate, int recordAmount) {
         this.id = id;
         this.recordProduct = recordProduct;
         this.recordEmployee = recordEmployee;
@@ -31,19 +32,19 @@ public class RecordBean {
         this.id = id;
     }
 
-    public String getRecordProduct() {
+    public Product getRecordProduct() {
         return recordProduct;
     }
 
-    public void setRecordProduct(String recordProduct) {
+    public void setRecordProduct(Product recordProduct) {
         this.recordProduct = recordProduct;
     }
 
-    public String getRecordEmployee() {
+    public Employee getRecordEmployee() {
         return recordEmployee;
     }
 
-    public void setRecordEmployee(String recordEmployee) {
+    public void setRecordEmployee(Employee recordEmployee) {
         this.recordEmployee = recordEmployee;
     }
 

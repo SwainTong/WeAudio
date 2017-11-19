@@ -13,7 +13,7 @@
 
 
         <TextView
-            android:id="@+id/tv_swipe_delect1"
+            android:id="@+id/tv_swipe_delet"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:gravity="center"
@@ -26,7 +26,7 @@
 
 
         <CheckBox
-            android:id="@+id/cb_swipe_tag1"
+            android:id="@+id/cb_swipe_update"
             android:layout_width="0dp"
             android:layout_height="fill_parent"
             android:layout_weight="1"
@@ -35,13 +35,13 @@
             android:textSize="20dp"
             android:background="#339900"
             android:button="@android:color/transparent"
-            android:text="标记"/>
+            android:text="修改"/>
 
 
 
 
         <TextView
-            android:id="@+id/tv_swipe_top1"
+            android:id="@+id/tv_swipe_top"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:textColor="#ffffff"

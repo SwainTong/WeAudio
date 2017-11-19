@@ -3,6 +3,7 @@ package com.lan.tong.weaudit.activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -38,12 +39,18 @@ public class AddEmployeeActivity extends AppCompatActivity {
             Employee mEmployee = new Employee();
             mEmployee.setEmployeeName(employee_name);
             mEmployee.setEmployeePhone(employee_phone);
-            mEmployee.save();
+            if (mEmployee.save()) {
+                Toast.makeText(this, "存储成功", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "存储失败", Toast.LENGTH_SHORT).show();
+            }
             Intent intent = new Intent(AddEmployeeActivity.this, MainActivity.class);
             startActivity(intent);
             finish();
         }
-        Toast.makeText(this,"员工姓名未填写！",Toast.LENGTH_SHORT).show();
+        else {
+            Toast.makeText(this, "员工姓名未填写！", Toast.LENGTH_SHORT).show();
+        }
     }
 
     //返回键
